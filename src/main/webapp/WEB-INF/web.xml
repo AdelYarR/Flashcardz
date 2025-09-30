@@ -10,6 +10,7 @@
   <servlet>
     <servlet-name>UserRegistryServlet</servlet-name>
     <servlet-class>ru.itis.example.user.controllers.UserRegistryServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>UserRegistryServlet</servlet-name>

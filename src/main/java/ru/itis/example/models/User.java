@@ -1,12 +1,6 @@
 package ru.itis.example.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.jetbrains.annotations.Nullable;
 
-@Data
-@AllArgsConstructor
-public class User {
-    private Long id;
-    private String name;
-    private String password;
+public record User(@Nullable Long id, String name, String password) {
 }
