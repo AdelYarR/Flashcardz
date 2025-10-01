@@ -5,19 +5,20 @@ import ru.itis.example.models.User;
 import ru.itis.example.user.repositories.UserRepository;
 import ru.itis.example.util.PasswordHasher;
 
+import java.rmi.ServerException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class UserRegistryService {
+public class UserService {
 
     private final Logger logger = new Logger(this.getClass().getName());
     private final UserRepository userRepository;
 
-    public UserRegistryService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User addUser(String name, String password, String passwordConfirm) {
+    public User registryUser(String name, String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             logger.info("Passwords don't match.");
             throw new IllegalArgumentException("passwords don't match");
@@ -38,7 +39,7 @@ public class UserRegistryService {
             throw new RuntimeException("failed to hash the password: " + err);
         }
         logger.info("Hashed password.");
-        
+
         User user = new User(null, name, hashedPassword);
 
         try {
@@ -49,6 +50,30 @@ public class UserRegistryService {
             logger.error("Database error occurred while adding the user: " + err);
             throw new RuntimeException("database error occurred while adding the user: " + err);
         }
+    }
+
+    public User logUser(String name, String password) {
+        Optional<User> foundUser = getUser(name);
+        if (foundUser.isEmpty()) {
+            logger.info("User " + name + " is not found.");
+            throw new IllegalArgumentException("user " + name + " is not found");
+        }
+        logger.info("User " + name + " is found.");
+
+        User user = foundUser.get();
+        String hashedPassword = user.password();
+        try {
+            if (PasswordHasher.verifyPassword(password, hashedPassword)) {
+                logger.info("User " + name + " was successfully logged.");
+                return user;
+            }
+        } catch (Exception err) {
+            logger.info("Failed to unhash the password: " + err);
+            throw new RuntimeException("failed to unhash the password: " + err);
+        }
+
+        logger.info("Passwords don't match.");
+        throw new IllegalArgumentException("passwords don't match");
     }
 
     public Optional<User> getUser(String name) {

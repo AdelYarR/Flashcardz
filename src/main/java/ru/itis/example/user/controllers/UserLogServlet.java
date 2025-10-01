@@ -5,17 +5,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.example.config.DatabaseConfig;
+import ru.itis.example.logger.Logger;
 import ru.itis.example.models.User;
 import ru.itis.example.user.repositories.UserRepository;
 import ru.itis.example.user.repositories.impl.UserRepositoryJdbcImpl;
 import ru.itis.example.user.services.UserService;
-import ru.itis.example.logger.Logger;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class UserRegistryServlet extends HttpServlet {
+public class UserLogServlet extends HttpServlet {
 
     private final Logger logger = new Logger(this.getClass().getName());
     private Connection connection;
@@ -41,16 +41,15 @@ public class UserRegistryServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("user_name");
         String password = request.getParameter("user_password");
-        String passwordConfirm = request.getParameter("user_password_confirm");
         logger.info("Username and password parameters received.");
 
         try {
-            User user = userService.registryUser(name, password, passwordConfirm);
+            User user = userService.logUser(name, password);
             request.setAttribute("user_id", user.id());
             request.setAttribute("user_name", user.name());
             request.getRequestDispatcher("group-menu.jsp").forward(request, response);
         } catch (RuntimeException err) {
-            request.getRequestDispatcher("registry.jsp").forward(request, response);
+            request.getRequestDispatcher("log.jsp").forward(request, response);
         }
     }
 

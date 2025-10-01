@@ -15,7 +15,7 @@
     <a href="registry.jsp">
         <button>Регистрация</button>
     </a>
-    <a href="">
+    <a href="log.jsp">
         <button>Авторизация</button>
     </a>
 </body>
