@@ -1,22 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: user
-  Date: 28.09.2025
-  Time: 15:31
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page isThreadSafe="false"  %>
 <html>
 <head>
     <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-    <a href="registry.jsp">
-        <button>Регистрация</button>
-    </a>
-    <a href="log.jsp">
-        <button>Авторизация</button>
-    </a>
+    <div id="auth_buttons">
+        <a href="registry.jsp">
+            <button>Регистрация</button>
+        </a>
+        <a href="log.jsp">
+            <button>Авторизация</button>
+        </a>
+    </div>
 </body>
 </html>

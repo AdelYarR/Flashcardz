@@ -7,26 +7,5 @@
 
   <display-name>Archetype Created Web Application</display-name>
 
-  <servlet>
-    <servlet-name>UserRegistryServlet</servlet-name>
-    <servlet-class>ru.itis.example.user.controllers.UserRegistryServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UserRegistryServlet</servlet-name>
-    <url-pattern>/registry</url-pattern>
-  </servlet-mapping>
-
-
-  <servlet>
-  <servlet-name>UserLogServlet</servlet-name>
-    <servlet-class>ru.itis.example.user.controllers.UserLogServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UserLogServlet</servlet-name>
-    <url-pattern>/log</url-pattern>
-  </servlet-mapping>
-
 </web-app>
 

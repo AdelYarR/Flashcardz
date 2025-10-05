@@ -1,6 +1,7 @@
 package ru.itis.example.user.controllers;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@WebServlet(value = "/log", loadOnStartup = 1)
 public class UserLogServlet extends HttpServlet {
 
     private final Logger logger = new Logger(this.getClass().getName());
@@ -28,10 +30,12 @@ public class UserLogServlet extends HttpServlet {
 
             UserRepository userRepository = new UserRepositoryJdbcImpl(connection);
             userService = new UserService(userRepository);
-        } catch (RuntimeException err) {
-            throw new RuntimeException(err);
-        } catch (SQLException err) {
-            throw new RuntimeException("failed to connect to sql: " + err);
+        } catch (RuntimeException e) {
+            logger.error("Failed: " + e);
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            logger.error("Failed to create connection to SQL: " + e);
+            throw new RuntimeException("failed to connect to sql: " + e);
         }
 
         logger.info("Successful initialization.");
@@ -48,8 +52,9 @@ public class UserLogServlet extends HttpServlet {
             request.setAttribute("user_id", user.id());
             request.setAttribute("user_name", user.name());
             request.getRequestDispatcher("group-menu.jsp").forward(request, response);
-        } catch (RuntimeException err) {
-            request.getRequestDispatcher("log.jsp").forward(request, response);
+        } catch (RuntimeException e) {
+            response.sendError(400, "Bad Request");
+//            request.getRequestDispatcher("log.jsp").forward(request, response);
         }
     }
 
@@ -59,8 +64,8 @@ public class UserLogServlet extends HttpServlet {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
             }
-        } catch (SQLException err) {
-            logger.error("Failed to close connection: " + err);
+        } catch (SQLException e) {
+            logger.error("Failed to close connection: " + e);
         }
     }
 }
