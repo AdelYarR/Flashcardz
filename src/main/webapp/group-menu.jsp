@@ -24,4 +24,10 @@
         </ul>
     </div>
 </header>
+
+<div class="card_groups">
+    <c:forEach var="card_group" items="${card_groups}">
+        <p>${card_group}</p>
+    </c:forEach>
+</div>
 </body>

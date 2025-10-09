@@ -47,14 +47,9 @@ public class UserService {
 
         User user = new User(null, name, hashedPassword);
 
-        try {
-            userRepository.addUser(user);
-            logger.info("User " + name + " was successfully added.");
-            return user;
-        } catch (SQLException e) {
-            logger.error("Database error occurred while adding the user: " + e);
-            throw new RuntimeException("database error occurred while adding the user: " + e);
-        }
+        userRepository.addUser(user);
+        logger.info("User " + name + " was successfully added.");
+        return user;
     }
 
     public User logUser(String name, String password) {
@@ -82,12 +77,7 @@ public class UserService {
     }
 
     public Optional<User> getUser(String name) {
-        try {
-            return userRepository.getUser(name);
-        } catch (SQLException e) {
-            logger.error("Database error occurred while searching for the user " + name + ": " + e);
-            throw new RuntimeException("database error occurred while searching for the user: " + e);
-        }
+        return userRepository.getUser(name);
     }
 
     public void validateName(String name) {

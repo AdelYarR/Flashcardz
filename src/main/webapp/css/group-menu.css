@@ -10,6 +10,7 @@ header {
     box-shadow: 0 3px 10px grey;
     background: white;
     z-index: 1000;
+    height: 60px;
 }
 
 header a {
@@ -57,4 +58,9 @@ header a {
     background-color: black;
     color: white;
     padding-left: 20px;
+}
+
+.card_groups {
+    margin-top: 100px;
+    padding: 20px;
 }
