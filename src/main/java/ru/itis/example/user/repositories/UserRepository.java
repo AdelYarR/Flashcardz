@@ -6,6 +6,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public interface UserRepository {
-    void addUser(User user);
+    Long addUser(User user);
     Optional<User> getUser(String name);
 }

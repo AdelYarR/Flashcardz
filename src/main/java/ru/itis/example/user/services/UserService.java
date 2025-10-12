@@ -3,9 +3,8 @@ package ru.itis.example.user.services;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.User;
 import ru.itis.example.user.repositories.UserRepository;
-import ru.itis.example.util.PasswordHasher;
+import ru.itis.example.util.Hasher;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class UserService {
@@ -17,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registryUser(String name, String password, String passwordConfirm) {
+    public Long registryUser(String name, String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             logger.info("User " + name + ": Passwords don't match.");
             throw new IllegalArgumentException("passwords don't match");
@@ -39,7 +38,7 @@ public class UserService {
 
         String hashedPassword;
         try {
-            hashedPassword = PasswordHasher.hashPassword(password);
+            hashedPassword = Hasher.hash(password);
         } catch (Exception e) {
             throw new RuntimeException("failed to hash the password: " + e);
         }
@@ -47,12 +46,12 @@ public class UserService {
 
         User user = new User(null, name, hashedPassword);
 
-        userRepository.addUser(user);
+        Long userId = userRepository.addUser(user);
         logger.info("User " + name + " was successfully added.");
-        return user;
+        return userId;
     }
 
-    public User logUser(String name, String password) {
+    public Long logUser(String name, String password) {
         Optional<User> foundUser = getUser(name);
         if (foundUser.isEmpty()) {
             logger.info("User " + name + " is not found.");
@@ -63,9 +62,9 @@ public class UserService {
         User user = foundUser.get();
         String hashedPassword = user.password();
         try {
-            if (PasswordHasher.verifyPassword(password, hashedPassword)) {
+            if (Hasher.verify(password, hashedPassword)) {
                 logger.info("User " + name + " was successfully logged.");
-                return user;
+                return user.id();
             }
         } catch (Exception e) {
             logger.info("User " + name + ": Failed to unhash the password: " + e);

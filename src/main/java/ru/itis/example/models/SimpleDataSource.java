@@ -1,5 +1,7 @@
 package ru.itis.example.models;
 
+import lombok.AllArgsConstructor;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;

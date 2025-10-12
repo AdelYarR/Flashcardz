@@ -21,14 +21,19 @@ public class UserRepositoryJdbcImpl implements UserRepository {
     }
 
     @Override
-    public void addUser(User user) {
+    public Long addUser(User user) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO users (name, password) VALUES (?, ?)";
+            String sql = "INSERT INTO users (name, password) VALUES (?, ?) RETURNING id";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, user.name());
             preparedStatement.setString(2, user.password());
 
-            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getLong("id");
+            } else {
+                throw new RuntimeException("failed to get generated ID");
+            }
         } catch (SQLException e) {
             logger.error("Database error occurred while adding the user: " + e);
             throw new RuntimeException("database error occurred while adding the user: " + e);

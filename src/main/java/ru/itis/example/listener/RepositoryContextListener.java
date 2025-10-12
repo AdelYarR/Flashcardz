@@ -3,11 +3,10 @@ package ru.itis.example.listener;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import ru.itis.example.card_group.repositories.CardGroupRepository;
+import ru.itis.example.auth.repository.impl.SessionRepositoryJdbcImpl;
 import ru.itis.example.card_group.repositories.impl.CardGroupRepositoryJdbcImpl;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.SimpleDataSource;
-import ru.itis.example.user.repositories.UserRepository;
 import ru.itis.example.user.repositories.impl.UserRepositoryJdbcImpl;
 
 import javax.sql.DataSource;
@@ -30,12 +29,13 @@ public class RepositoryContextListener implements ServletContextListener {
             logger.info("PostgreSQL driver loaded: " + org.postgresql.Driver.getVersion());
 
             DataSource dataSource = createDataSource();
-            UserRepository userRepository = new UserRepositoryJdbcImpl(dataSource);
-            CardGroupRepository cardGroupRepository = new CardGroupRepositoryJdbcImpl(dataSource);
-            logger.info("Initialized repositories.");
 
-            event.getServletContext().setAttribute("user_repository", userRepository);
-            event.getServletContext().setAttribute("card_group_repository", cardGroupRepository);
+            event.getServletContext().setAttribute(
+                    "user_repository", new UserRepositoryJdbcImpl(dataSource));
+            event.getServletContext().setAttribute(
+                    "card_group_repository", new CardGroupRepositoryJdbcImpl(dataSource));
+            event.getServletContext().setAttribute(
+                    "session_repository", new SessionRepositoryJdbcImpl(dataSource));
             logger.info("Put repositories into servlet context.");
         } catch (ClassNotFoundException e) {
             logger.error("Failed to find PostgreSQL JDBC Driver: " + e);

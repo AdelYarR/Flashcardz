@@ -4,28 +4,28 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class PasswordHasher {
-    public static String hashPassword(String password) throws Exception {
+public class Hasher {
+    public static String hash(String value) throws Exception {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
 
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(salt);
-        byte[] hashedPassword = md.digest(password.getBytes());
+        byte[] hashedValue = md.digest(value.getBytes());
 
         return Base64.getEncoder().encodeToString(salt) + ":" +
-                Base64.getEncoder().encodeToString(hashedPassword);
+                Base64.getEncoder().encodeToString(hashedValue);
     }
 
-    public static boolean verifyPassword(String password, String hashedPassword) throws Exception {
-        String[] parts = hashedPassword.split(":");
+    public static boolean verify(String value, String hashedValue) throws Exception {
+        String[] parts = hashedValue.split(":");
         byte[] salt = Base64.getDecoder().decode(parts[0]);
 
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(salt);
-        byte[] hashedPasswordBytes = md.digest(password.getBytes());
+        byte[] hashedValueBytes = md.digest(value.getBytes());
 
-        return parts[1].equals(Base64.getEncoder().encodeToString(hashedPasswordBytes));
+        return parts[1].equals(Base64.getEncoder().encodeToString(hashedValueBytes));
     }
 }
