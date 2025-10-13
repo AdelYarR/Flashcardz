@@ -7,11 +7,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.example.auth.repository.SessionRepository;
-import ru.itis.example.auth.service.AuthService;
+import ru.itis.example.auth.service.SessionService;
 import ru.itis.example.logger.Logger;
-import ru.itis.example.models.User;
-import ru.itis.example.user.repositories.UserRepository;
-import ru.itis.example.user.services.UserService;
+import ru.itis.example.user.repository.UserRepository;
+import ru.itis.example.user.service.UserService;
 
 import java.io.IOException;
 
@@ -20,7 +19,7 @@ public class UserLogServlet extends HttpServlet {
 
     private final Logger logger = new Logger(this.getClass().getName());
     private UserService userService;
-    private AuthService authService;
+    private SessionService sessionService;
 
     @Override
     public void init() {
@@ -28,7 +27,7 @@ public class UserLogServlet extends HttpServlet {
         userService = new UserService(userRepository);
 
         SessionRepository sessionRepository = (SessionRepository) getServletContext().getAttribute("session_repository");
-        authService = new AuthService(sessionRepository);
+        sessionService = new SessionService(sessionRepository);
 
         logger.info("Successful initialization.");
     }
@@ -42,12 +41,12 @@ public class UserLogServlet extends HttpServlet {
         try {
             Long userId = userService.logUser(name, password);
 
-            String sessionId = authService.add(userId);
+            String sessionId = sessionService.add(userId);
             Cookie sessionCookie = new Cookie("session_id", sessionId);
             response.addCookie(sessionCookie);
             logger.info("Cookie with session id " + sessionId + " was successfully added.");
 
-            response.sendRedirect("group-menu");
+            response.sendRedirect("hub/groups");
         } catch (RuntimeException e) {
             response.sendError(400, "Bad Request");}
     }

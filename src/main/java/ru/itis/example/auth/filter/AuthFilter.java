@@ -6,18 +6,18 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.example.auth.repository.SessionRepository;
-import ru.itis.example.auth.service.AuthService;
+import ru.itis.example.auth.service.SessionService;
 import ru.itis.example.logger.Logger;
+import ru.itis.example.util.CookieHelper;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 
 @WebFilter("*")
 public class AuthFilter implements Filter {
 
     private final Logger logger = new Logger(this.getClass().getName());
-    private AuthService authService;
+    private SessionService sessionService;
 
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/",
@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         SessionRepository sessionRepository = (SessionRepository) filterConfig.getServletContext().getAttribute("session_repository");
-        authService = new AuthService(sessionRepository);
+        sessionService = new SessionService(sessionRepository);
         logger.info("Successful initialization.");
     }
 
@@ -48,11 +48,10 @@ public class AuthFilter implements Filter {
         }
 
         Cookie[] cookies = request.getCookies();
-        String sessionId = getSessionIdFromCookies(cookies);
+        String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
 
-        boolean isAuthenticated = (sessionId != null && authService.isValid(sessionId));
+        boolean isAuthenticated = (sessionId != null && sessionService.isValid(sessionId));
 
-        System.out.println(sessionId);
         if (!isAuthenticated) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
@@ -63,16 +62,5 @@ public class AuthFilter implements Filter {
 
     private String getRequestPath(HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());
-    }
-
-    private String getSessionIdFromCookies(Cookie[] cookies) {
-        if (cookies != null) {
-            return Arrays.stream(cookies)
-                    .filter(c -> "session_id".equals(c.getName()))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
-        return null;
     }
 }

@@ -4,10 +4,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import ru.itis.example.auth.repository.SessionRepository;
-import ru.itis.example.auth.service.AuthService;
-import ru.itis.example.models.User;
-import ru.itis.example.user.repositories.UserRepository;
-import ru.itis.example.user.services.UserService;
+import ru.itis.example.auth.service.SessionService;
+import ru.itis.example.user.repository.UserRepository;
+import ru.itis.example.user.service.UserService;
 import ru.itis.example.logger.Logger;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class UserRegistryServlet extends HttpServlet {
 
     private final Logger logger = new Logger(this.getClass().getName());
     private UserService userService;
-    private AuthService authService;
+    private SessionService sessionService;
 
     @Override
     public void init() {
@@ -25,7 +24,7 @@ public class UserRegistryServlet extends HttpServlet {
         userService = new UserService(userRepository);
 
         SessionRepository sessionRepository = (SessionRepository) getServletContext().getAttribute("session_repository");
-        authService = new AuthService(sessionRepository);
+        sessionService = new SessionService(sessionRepository);
 
         logger.info("Successful initialization.");
     }
@@ -40,12 +39,12 @@ public class UserRegistryServlet extends HttpServlet {
         try {
             Long userId = userService.registryUser(name, password, passwordConfirm);
 
-            String sessionId = authService.add(userId);
+            String sessionId = sessionService.add(userId);
             Cookie sessionCookie = new Cookie("session_id", sessionId);
             response.addCookie(sessionCookie);
             logger.info("Cookie with session id " + sessionId + " was successfully added.");
 
-            response.sendRedirect("group-menu");
+            response.sendRedirect("hub/groups");
         } catch (RuntimeException e) {
             response.sendError(400, "Bad Request");
         }
