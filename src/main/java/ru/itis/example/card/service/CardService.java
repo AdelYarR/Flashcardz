@@ -4,7 +4,11 @@ import ru.itis.example.card.repository.CardRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CardService {
 
@@ -44,5 +48,35 @@ public class CardService {
     public void removeByCardId(Long cardId) {
         cardRepository.removeByCardId(cardId);
         logger.info("Card " + cardId + " was successfully removed from DB.");
+    }
+
+    public void processCardUpdate(List<Card> cards, List<Card> newCards) {
+        Map<Long, Card> cardsMap = cards.stream()
+                .collect(Collectors.toMap(Card::getId, Function.identity()));
+
+        for (Card card : newCards) {
+            if (cardsMap.containsKey(card.getId())) {
+                update(card);
+            } else {
+                add(card);
+            }
+            cardsMap.remove(card.getId());
+        }
+        cardsMap.forEach((key, val) -> removeByCardId(key));
+    }
+
+    public List<Card> buildCardsFromParams(Long authorId, Long cardGroupId, String[] cardIds, String[] questions, String[] answers) {
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < questions.length; i++) {
+            Long cardId = cardIds.length < i ? Long.valueOf(cardIds[i]) : null;
+            cards.add(new Card(
+                    cardId,
+                    authorId,
+                    cardGroupId,
+                    questions[i],
+                    answers[i]
+            ));
+        }
+        return cards;
     }
 }
