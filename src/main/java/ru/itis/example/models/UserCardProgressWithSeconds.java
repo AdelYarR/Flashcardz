@@ -1,18 +1,19 @@
 package ru.itis.example.models;
 
-public class UserCardProgress {
+
+public class UserCardProgressWithSeconds {
     private Long id;
     private Long userId;
     private Long cardId;
-    private Difficulty difficulty;
+    private Integer maxSeconds;
     // Время создания/возобновления сессии в Unix-time секундах
     private Long lastAccess;
 
-    public UserCardProgress(Long id, Long userId, Long cardId, Difficulty difficulty, Long lastAccess) {
+    public UserCardProgressWithSeconds(Long id, Long userId, Long cardId, Integer maxSeconds, Long lastAccess) {
         this.id = id;
         this.userId = userId;
         this.cardId = cardId;
-        this.difficulty = difficulty;
+        this.maxSeconds = maxSeconds;
         this.lastAccess = lastAccess;
     }
 
@@ -40,19 +41,10 @@ public class UserCardProgress {
         this.cardId = cardId;
     }
 
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
+    public boolean isExpired() {
+        long sessionMaxUnixTime = lastAccess + maxSeconds;
+        long currentUnixTime = System.currentTimeMillis() / 1000;
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public Long getLastAccess() {
-        return lastAccess;
-    }
-
-    public void setLastAccess(Long lastAccess) {
-        this.lastAccess = lastAccess;
+        return currentUnixTime < sessionMaxUnixTime;
     }
 }

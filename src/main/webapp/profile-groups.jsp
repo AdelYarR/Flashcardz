@@ -7,8 +7,11 @@
     <title>Profile groups</title>
 </head>
 <body>
+    <%@ include file="header.jsp" %>
+
     <div>
-        <a href="${pageContext.request.contextPath}/profile/groups">Список групп</a>
+        <a href="${pageContext.request.contextPath}/profile/groups">Мои группы</a>
+        <a href="${pageContext.request.contextPath}/profile/saved-groups">Загруженные</a>
         <a href="${pageContext.request.contextPath}/profile/add-group">Добавить</a>
     </div>
 

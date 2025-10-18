@@ -1,12 +1,11 @@
-package ru.itis.example.card.service;
+package ru.itis.example.card.services;
 
-import ru.itis.example.card.repository.CardRepository;
+import ru.itis.example.card.repositories.CardRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
+import ru.itis.example.models.TrainingSession;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,15 @@ public class CardService {
         List<Card> cards = cardRepository.getCardsByGroupId(cardGroupId);
         logger.info("Cards were successfully taken from DB.");
         return cards;
+    }
+
+    public Card getCardById(Long cardId) {
+        Optional<Card> optionalCard = cardRepository.getCardById(cardId);
+        if (optionalCard.isEmpty()) {
+            throw new RuntimeException("failed to get card by its id");
+        }
+
+        return optionalCard.get();
     }
 
     public void update(Card card) {
@@ -67,8 +75,10 @@ public class CardService {
 
     public List<Card> buildCardsFromParams(Long authorId, Long cardGroupId, String[] cardIds, String[] questions, String[] answers) {
         List<Card> cards = new ArrayList<>();
-        for (int i = 0; i < questions.length; i++) {
-            Long cardId = cardIds.length < i ? Long.valueOf(cardIds[i]) : null;
+
+        int max = Math.max(questions.length, cardIds.length);
+        for (int i = 0; i < max; i++) {
+            Long cardId = i < cardIds.length ? Long.valueOf(cardIds[i]) : null;
             cards.add(new Card(
                     cardId,
                     authorId,

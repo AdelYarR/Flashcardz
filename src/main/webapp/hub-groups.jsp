@@ -8,23 +8,7 @@
     <link rel="stylesheet" href="css/group-menu.css">
 </head>
 <body>
-    <header>
-        <a href="#" class="logo">LOGO</a>
-
-        <form action="" method="get">
-            <input type="text" placeholder="Поиск...">
-            <button type="submit">Отправить</button>
-        </form>
-
-        <div class="profile_box">
-            <a href="#" class="dropdown_profile">${user_name}</a>
-            <ul>
-                <li><a href="${pageContext.request.contextPath}/profile/groups">Профиль</a></li>
-                <li><a href="#">Настройки</a></li>
-                <li><a href="#">Выход</a></li>
-            </ul>
-        </div>
-    </header>
+    <%@ include file="header.jsp" %>
 
     <div class="card_groups">
         <c:forEach var="card_group" items="${card_groups}">

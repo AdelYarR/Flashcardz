@@ -1,8 +1,9 @@
-package ru.itis.example.card.repository.impl;
+package ru.itis.example.card.repositories.impl;
 
-import ru.itis.example.card.repository.CardRepository;
+import ru.itis.example.card.repositories.CardRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
+import ru.itis.example.models.TrainingSession;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CardRepositoryJdbcImpl implements CardRepository {
 
@@ -82,6 +84,38 @@ public class CardRepositoryJdbcImpl implements CardRepository {
         } catch (SQLException e) {
             logger.error("Database error occurred while getting cards: " + e);
             throw new RuntimeException("database error occurred while getting cards: " + e);
+        }
+    }
+
+    public Optional<Card> getCardById(Long cardId) {
+        Optional<Card> optionalCard;
+
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "SELECT author_id, card_group_id, question, answer FROM cards WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setLong(1, cardId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Card card = new Card(
+                        cardId,
+                        resultSet.getLong("author_id"),
+                        resultSet.getLong("card_group_id"),
+                        resultSet.getString("answer"),
+                        resultSet.getString("question")
+                );
+                optionalCard = Optional.of(card);
+            } else {
+                optionalCard = Optional.empty();
+            }
+
+            preparedStatement.close();
+            return optionalCard;
+        } catch (SQLException e) {
+            logger.error("Database error occurred while getting card by its id: " + e);
+            throw new RuntimeException("database error occurred while getting card by its id: " + e);
         }
     }
 

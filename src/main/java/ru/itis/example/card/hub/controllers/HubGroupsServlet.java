@@ -1,11 +1,11 @@
-package ru.itis.example.card.hub.controller;
+package ru.itis.example.card.hub.controllers;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.example.card.repository.CardGroupRepository;
-import ru.itis.example.card.service.GroupService;
+import ru.itis.example.card.repositories.CardGroupRepository;
+import ru.itis.example.card.services.GroupService;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.CardGroup;
 
@@ -29,6 +29,10 @@ public class HubGroupsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             List<CardGroup> cardGroups = cardGroupService.getCardGroups();
+
+            String inputText = request.getParameter("input_text");
+            cardGroups = cardGroupService.processGroupsByInput(cardGroups, inputText);
+
             request.setAttribute("card_groups", cardGroups);
             request.getRequestDispatcher("/hub-groups.jsp").forward(request, response);
         } catch (Exception e) {

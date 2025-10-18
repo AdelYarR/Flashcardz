@@ -1,4 +1,4 @@
-package ru.itis.example.card.profile.controller;
+package ru.itis.example.card.profile.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,8 +24,8 @@ public class ProfileGroupAddServlet extends BaseCardGroupServlet {
 
             String cardGroupName = request.getParameter("card_group_name");
 
-            String[] questions = request.getParameterValues("questions[]");
-            String[] answers = request.getParameterValues("answers[]");
+            String[] questions = getOrDefault(request.getParameterValues("questions[]"));
+            String[] answers = getOrDefault(request.getParameterValues("answers[]"));
 
             validateQuestionsAnswers(questions, answers);
 

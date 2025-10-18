@@ -5,25 +5,29 @@
 <html>
 <head>
     <title>Hub cards</title>
-    <link rel="stylesheet" href="css/group-menu.css">
 </head>
 <body>
-<header>
-    <a href="#" class="logo">LOGO</a>
+    <%@ include file="header.jsp" %>
 
-    <div class="profile_box">
-        <a href="#" class="dropdown_profile">${user_name}</a>
-        <ul>
-            <li><a href="#">Профиль</a></li>
-            <li><a href="#">Настройки</a></li>
-            <li><a href="#">Выход</a></li>
-        </ul>
+    <script src="${pageContext.request.contextPath}/js/hub-card.js"></script>
+
+    <div>
+        <form method="get" action="${pageContext.request.contextPath}/training-start">
+            <input type="hidden" name="card_group_id" value="${card_group_id}">
+            <button type="submit">Тренировать</button>
+        </form>
+
+        <form method="post" action="${pageContext.request.contextPath}/drop">
+            <input type="hidden" name="card_group_id" value="${card_group_id}">
+            <button type="submit">Сбросить</button>
+        </form>
     </div>
-</header>
 
-<div class="cards">
-    <c:forEach var="card" items="${cards}">
-        <my:hub-card card="${card}"/>
-    </c:forEach>
-</div>
+    <button type="button" id="show_button">Показать карты</button>
+
+    <div id="cards" style="display: none;">
+        <c:forEach var="card" items="${cards}">
+            <my:hub-card card="${card}"/>
+        </c:forEach>
+    </div>
 </body>

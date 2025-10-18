@@ -8,6 +8,18 @@
         <h3>${card_group.name()}</h3>
     </a>
 
+    <c:choose>
+        <c:when test="${not card_group.uploaded()}">
+            <form method="post" action="${pageContext.request.contextPath}/profile/publish-group">
+                <input type="hidden" name="card_group_id" value="${card_group.id()}">
+                <button type="submit" onclick="return confirm('Вы уверены, что хотите опубликовать эту группу?')">Опубликовать</button>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <p>Опубликовано</p>
+        </c:otherwise>
+    </c:choose>
+
     <form method="get" action="${pageContext.request.contextPath}/profile/update-group">
         <input type="hidden" name="card_group_id" value="${card_group.id()}">
         <input type="hidden" name="card_group_name" value="${card_group.name()}">

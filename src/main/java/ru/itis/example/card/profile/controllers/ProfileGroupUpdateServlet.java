@@ -1,19 +1,13 @@
-package ru.itis.example.card.profile.controller;
+package ru.itis.example.card.profile.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.example.models.Card;
-import ru.itis.example.util.CookieHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @WebServlet("/profile/update-group")
 public class ProfileGroupUpdateServlet extends BaseCardGroupServlet {
@@ -45,11 +39,12 @@ public class ProfileGroupUpdateServlet extends BaseCardGroupServlet {
 
             List<Card> cards = cardService.getCardsByGroupId(cardGroupId);
 
-            String[] questions = request.getParameterValues("questions[]");
-            String[] answers = request.getParameterValues("answers[]");
-            String[] cardIds = request.getParameterValues("card_ids[]");
+            String[] questions = getOrDefault(request.getParameterValues("questions[]"));
+            String[] answers = getOrDefault(request.getParameterValues("answers[]"));
+            String[] cardIds = getOrDefault(request.getParameterValues("card_ids[]"));
 
             validateQuestionsAnswers(questions, answers);
+            logger.info("Validated successfully");
 
             List<Card> newCards = cardService.buildCardsFromParams(authorId, cardGroupId, cardIds, questions, answers);
             cardService.processCardUpdate(cards, newCards);

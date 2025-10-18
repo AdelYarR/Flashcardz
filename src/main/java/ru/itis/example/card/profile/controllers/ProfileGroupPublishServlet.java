@@ -1,4 +1,4 @@
-package ru.itis.example.card.profile.controller;
+package ru.itis.example.card.profile.controllers;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -6,15 +6,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/profile/delete-group")
-public class ProfileGroupDeleteServlet extends BaseCardGroupServlet {
+@WebServlet("/profile/publish-group")
+public class ProfileGroupPublishServlet extends BaseCardGroupServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Long cardGroupId = Long.valueOf(request.getParameter("card_group_id"));
-            cardService.removeAllByGroupId(cardGroupId);
-            cardGroupService.removeByGroupId(cardGroupId);
-
+            cardGroupService.publishByGroupId(cardGroupId);
             response.sendRedirect(getServletContext().getContextPath() + "/profile/groups");
         } catch (Exception e) {
             try {

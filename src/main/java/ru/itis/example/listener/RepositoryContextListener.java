@@ -4,10 +4,11 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.itis.example.auth.repository.impl.SessionRepositoryJdbcImpl;
-import ru.itis.example.card.repository.impl.CardRepositoryJdbcImpl;
-import ru.itis.example.card.repository.impl.CardGroupRepositoryJdbcImpl;
+import ru.itis.example.card.repositories.impl.CardRepositoryJdbcImpl;
+import ru.itis.example.card.repositories.impl.CardGroupRepositoryJdbcImpl;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.SimpleDataSource;
+import ru.itis.example.training.repository.impl.TrainingRepositoryJdbcImpl;
 import ru.itis.example.user.repository.impl.UserRepositoryJdbcImpl;
 
 import javax.sql.DataSource;
@@ -39,6 +40,8 @@ public class RepositoryContextListener implements ServletContextListener {
                     "card_group_repository", new CardGroupRepositoryJdbcImpl(dataSource));
             event.getServletContext().setAttribute(
                     "card_repository", new CardRepositoryJdbcImpl(dataSource));
+            event.getServletContext().setAttribute(
+                    "training_repository", new TrainingRepositoryJdbcImpl(dataSource));
             logger.info("Put repositories into servlet context.");
         } catch (ClassNotFoundException e) {
             logger.error("Failed to find PostgreSQL JDBC Driver: " + e);

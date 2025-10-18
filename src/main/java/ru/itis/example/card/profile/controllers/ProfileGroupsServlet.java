@@ -1,4 +1,4 @@
-package ru.itis.example.card.profile.controller;
+package ru.itis.example.card.profile.controllers;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;

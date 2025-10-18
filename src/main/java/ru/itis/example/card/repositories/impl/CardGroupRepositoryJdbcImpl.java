@@ -1,6 +1,6 @@
-package ru.itis.example.card.repository.impl;
+package ru.itis.example.card.repositories.impl;
 
-import ru.itis.example.card.repository.CardGroupRepository;
+import ru.itis.example.card.repositories.CardGroupRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.CardGroup;
 
@@ -145,6 +145,22 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
         } catch (SQLException e) {
             logger.error("Database error occurred while updating card group name: " + e);
             throw new RuntimeException("database error occurred while updating card group name: " + e);
+        }
+    }
+
+    @Override
+    public void publishByGroupId(Long cardGroupId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "UPDATE card_groups SET uploaded = true WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setLong(1, cardGroupId);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            logger.error("Database error occurred while publishing card group: " + e);
+            throw new RuntimeException("database error occurred while publishing card group: " + e);
         }
     }
 }

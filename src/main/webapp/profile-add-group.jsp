@@ -9,6 +9,8 @@
 <body>
   <script src="${pageContext.request.contextPath}/js/profile-card.js"></script>
 
+  <%@ include file="header.jsp" %>
+
   <form method="post" action="${pageContext.request.contextPath}/profile/add-group">
     <div>
       <label>Название группы</label>

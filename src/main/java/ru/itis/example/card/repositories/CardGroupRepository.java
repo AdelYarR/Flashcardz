@@ -1,4 +1,4 @@
-package ru.itis.example.card.repository;
+package ru.itis.example.card.repositories;
 
 import ru.itis.example.models.CardGroup;
 
@@ -10,4 +10,5 @@ public interface CardGroupRepository {
     List<CardGroup> getCardGroupsByAuthorId(Long authorId);
     void removeByGroupId(Long groupId);
     void updateCardGroupName(Long cardGroupId, String newCardGroupName);
+    void publishByGroupId(Long cardGroupId);
 }

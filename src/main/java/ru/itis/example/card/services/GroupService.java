@@ -1,6 +1,6 @@
-package ru.itis.example.card.service;
+package ru.itis.example.card.services;
 
-import ru.itis.example.card.repository.CardGroupRepository;
+import ru.itis.example.card.repositories.CardGroupRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.CardGroup;
 
@@ -39,5 +39,20 @@ public class GroupService {
     public void updateCardGroupName(Long cardGroupId, String newCardGroupName) {
         cardGroupRepository.updateCardGroupName(cardGroupId, newCardGroupName);
         logger.info("Card group " + cardGroupId + " successfully changed name.");
+    }
+
+    public void publishByGroupId(Long cardGroupId) {
+        cardGroupRepository.publishByGroupId(cardGroupId);
+        logger.info("Card group " + cardGroupId + " successfully published.");
+    }
+
+    public List<CardGroup> processGroupsByInput(List<CardGroup> cardGroups, String inputText) {
+        if (inputText != null) {
+            return cardGroups.stream()
+                    .filter(g -> g.name().toLowerCase().contains(inputText.toLowerCase()))
+                    .toList();
+        }
+
+        return cardGroups;
     }
 }

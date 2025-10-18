@@ -1,11 +1,11 @@
-package ru.itis.example.card.hub.controller;
+package ru.itis.example.card.hub.controllers;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.example.card.repository.CardRepository;
-import ru.itis.example.card.service.CardService;
+import ru.itis.example.card.repositories.CardRepository;
+import ru.itis.example.card.services.CardService;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
 
@@ -31,6 +31,7 @@ public class HubCardsServlet extends HttpServlet {
             Long cardGroupId = Long.valueOf(request.getParameter("card_group_id"));
             List<Card> cards = cardService.getCardsByGroupId(cardGroupId);
             request.setAttribute("cards", cards);
+            request.setAttribute("card_group_id", cardGroupId);
             request.getRequestDispatcher("/hub-cards.jsp").forward(request, response);
         } catch (Exception e) {
             try {

@@ -1,4 +1,4 @@
-package ru.itis.example.card.profile.controller;
+package ru.itis.example.card.profile.controllers;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
@@ -8,10 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.bind.ValidationException;
 import ru.itis.example.auth.repository.SessionRepository;
 import ru.itis.example.auth.service.SessionService;
-import ru.itis.example.card.repository.CardGroupRepository;
-import ru.itis.example.card.repository.CardRepository;
-import ru.itis.example.card.service.CardService;
-import ru.itis.example.card.service.GroupService;
+import ru.itis.example.card.repositories.CardGroupRepository;
+import ru.itis.example.card.repositories.CardRepository;
+import ru.itis.example.card.services.CardService;
+import ru.itis.example.card.services.GroupService;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.util.CookieHelper;
 
@@ -45,8 +45,12 @@ public class BaseCardGroupServlet extends HttpServlet {
     }
 
     protected void validateQuestionsAnswers(String[] questions, String[] answers) throws ValidationException {
-        if (questions == null || answers == null || questions.length != answers.length) {
+        if (questions.length != answers.length) {
             throw new ValidationException("invalid questions and answers data");
         }
+    }
+
+    protected String[] getOrDefault(String[] arr) {
+        return arr != null ? arr : new String[0];
     }
 }

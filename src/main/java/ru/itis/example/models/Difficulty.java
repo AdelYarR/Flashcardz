@@ -1,4 +1,4 @@
-package ru.itis.example.models.enums;
+package ru.itis.example.models;
 
 public enum Difficulty {
     VERY_EASY,
