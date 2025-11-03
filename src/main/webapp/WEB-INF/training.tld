@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>training</short-name>
+    <uri>http://itis.example.ru/training/functions</uri>
+
+    <function>
+        <name>hasActiveTrainingSession</name>
+        <function-class>ru.itis.example.training.util.TrainingSessionHelper</function-class>
+        <function-signature>boolean hasActiveTrainingSession(jakarta.servlet.http.HttpServletRequest,java.lang.Long)</function-signature>
+    </function>
+</taglib>

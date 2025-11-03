@@ -149,7 +149,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting cards by card group id: " + e);
-            throw new RuntimeException("database error occurred while delete cards by card group id: " + e);
+            throw new RuntimeException("database error occurred while deleting cards by card group id: " + e);
         }
     }
 
@@ -165,7 +165,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting card by id: " + e);
-            throw new RuntimeException("database error occurred while delete card by id: " + e);
+            throw new RuntimeException("database error occurred while deleting card by id: " + e);
         }
     }
 }

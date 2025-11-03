@@ -59,6 +59,22 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
     }
 
     @Override
+    public void removeBySessionId(String sessionId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "DELETE FROM sessions WHERE session_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, sessionId);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            logger.error("Database error occurred while deleting session by its id: " + e);
+            throw new RuntimeException("database error occurred while deleting session by its id: " + e);
+        }
+    }
+
+    @Override
     public Optional<Session> findBySessionId(String sessionId) {
         Optional<Session> optionalSession;
         try (Connection connection = dataSource.getConnection()) {

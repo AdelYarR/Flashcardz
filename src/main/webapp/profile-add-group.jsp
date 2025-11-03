@@ -5,6 +5,7 @@
 <html>
 <head>
   <title>Add group</title>
+  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
   <script src="${pageContext.request.contextPath}/js/profile-card.js"></script>

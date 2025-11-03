@@ -2,6 +2,7 @@ package ru.itis.example.card.services;
 
 import ru.itis.example.card.repositories.CardGroupRepository;
 import ru.itis.example.logger.Logger;
+import ru.itis.example.models.Card;
 import ru.itis.example.models.CardGroup;
 
 import java.util.List;
@@ -10,6 +11,8 @@ public class GroupService {
 
     private final Logger logger = new Logger(this.getClass().getName());
     private final CardGroupRepository cardGroupRepository;
+
+    private static final int PAGE_SIZE = 12;
 
     public GroupService(CardGroupRepository cardGroupRepository) {
         this.cardGroupRepository = cardGroupRepository;
@@ -54,5 +57,19 @@ public class GroupService {
         }
 
         return cardGroups;
+    }
+
+    public List<CardGroup> getPagedSublistOfGroups(List<CardGroup> cardGroups, int page) {
+        int startIndex = (page - 1) * PAGE_SIZE;
+        int endIndex = Math.min(startIndex + PAGE_SIZE, cardGroups.size());
+
+        if (startIndex < 0) startIndex = 0;
+        if (startIndex > cardGroups.size()) startIndex = 0;
+
+        return cardGroups.subList(startIndex, endIndex);
+    }
+
+    public int getTotalPages(List<CardGroup> cardGroups) {
+        return (int) Math.ceil((double) cardGroups.size() / PAGE_SIZE);
     }
 }

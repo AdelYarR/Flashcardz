@@ -33,7 +33,14 @@ public class HubGroupsServlet extends HttpServlet {
             String inputText = request.getParameter("input_text");
             cardGroups = cardGroupService.processGroupsByInput(cardGroups, inputText);
 
-            request.setAttribute("card_groups", cardGroups);
+            String pageParameter = request.getParameter("page");
+            int page = (pageParameter != null) ? Integer.parseInt(pageParameter) : 1;
+            int totalPages = cardGroupService.getTotalPages(cardGroups);
+            List<CardGroup> pagedCardGroups = cardGroupService.getPagedSublistOfGroups(cardGroups, page);
+
+            request.setAttribute("page", page);
+            request.setAttribute("total_pages", totalPages);
+            request.setAttribute("card_groups", pagedCardGroups);
             request.getRequestDispatcher("/hub-groups.jsp").forward(request, response);
         } catch (Exception e) {
             try {

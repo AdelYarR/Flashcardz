@@ -2,9 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="training" uri="http://itis.example.ru/training/functions" %>
+
 <html>
 <head>
     <title>Hub cards</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
     <%@ include file="header.jsp" %>
@@ -17,9 +20,16 @@
             <button type="submit">Тренировать</button>
         </form>
 
-        <form method="post" action="${pageContext.request.contextPath}/drop">
+        <c:if test="${training:hasActiveTrainingSession(pageContext.request, card_group_id)}">
+            <form method="get" action="${pageContext.request.contextPath}/training-continue">
+                <input type="hidden" name="card_group_id" value="${card_group_id}">
+                <button type="submit">Продолжить</button>
+            </form>
+        </c:if>
+
+        <form method="post" action="${pageContext.request.contextPath}/training-reset">
             <input type="hidden" name="card_group_id" value="${card_group_id}">
-            <button type="submit">Сбросить</button>
+            <button type="submit" onclick="return confirm('Вы уверены, что хотите сбросить время карточек?')">Сбросить</button>
         </form>
     </div>
 

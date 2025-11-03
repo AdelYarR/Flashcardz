@@ -25,6 +25,10 @@ public class TrainingService {
         trainingRepository.deleteOldTrainingSession(userId, cardGroupId);
     }
 
+    public void deleteTrainingSession(String trainingSessionId) {
+        trainingRepository.deleteTrainingSession(trainingSessionId);
+    }
+
     public List<UserCardProgressWithSeconds> getUserCardProgresses(Long userId, Long cardGroupId) {
         return trainingRepository.getProgressesByUserAndCardGroupId(userId, cardGroupId);
     }
@@ -100,5 +104,9 @@ public class TrainingService {
 
     public void updateIndexOfTrainingSession(TrainingSession trainingSession) {
         trainingRepository.updateIndexOfTrainingSession(trainingSession.getCurrentIndex() + 1, trainingSession.getSessionId());
+    }
+
+    public void deleteUserCardProgressByUserAndGroupId(Long userId, Long cardGroupId) {
+        trainingRepository.deleteUserCardProgressByUserAndGroupId(userId, cardGroupId);
     }
 }

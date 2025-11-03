@@ -18,7 +18,15 @@ public class ProfileGroupsServlet extends BaseCardGroupServlet {
             logger.info("Got author id from session: " + authorId);
 
             List<CardGroup> cardGroups = cardGroupService.getCardGroupsByAuthorId(authorId);
-            request.setAttribute("card_groups", cardGroups);
+
+            String pageParameter = request.getParameter("page");
+            int page = (pageParameter != null) ? Integer.parseInt(pageParameter) : 1;
+            int totalPages = cardGroupService.getTotalPages(cardGroups);
+            List<CardGroup> pagedCardGroups = cardGroupService.getPagedSublistOfGroups(cardGroups, page);
+
+            request.setAttribute("page", page);
+            request.setAttribute("total_pages", totalPages);
+            request.setAttribute("card_groups", pagedCardGroups);
             request.getRequestDispatcher("/profile-groups.jsp").forward(request, response);
         } catch (Exception e) {
             try {

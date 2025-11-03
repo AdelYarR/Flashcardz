@@ -5,13 +5,13 @@
 <html>
 <head>
     <title>Profile groups</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
     <%@ include file="header.jsp" %>
 
     <div>
         <a href="${pageContext.request.contextPath}/profile/groups">Мои группы</a>
-        <a href="${pageContext.request.contextPath}/profile/saved-groups">Загруженные</a>
         <a href="${pageContext.request.contextPath}/profile/add-group">Добавить</a>
     </div>
 
@@ -20,5 +20,7 @@
             <my:profile-card-group card_group="${card_group}"/>
         </c:forEach>
     </div>
+
+    <my:pagination page="${page}" totalPages="${total_pages}" />
 </body>
 </html>

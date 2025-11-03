@@ -2,19 +2,28 @@
 <html>
 <head>
     <title>Registry</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
     <form method="post" action="registry">
-        <label for="login">Логин:</label>
-        <input type="text" id="login" name="user_name" required>
+        <div id="registry_form">
+            <div>
+                <label for="login">Логин:</label>
+                <input type="text" id="login" name="user_name" required>
+            </div>
 
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="user_password" required>
+            <div>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="user_password" required>
+            </div>
 
-        <label for="password_confirm">Подтвердите пароль:</label>
-        <input type="password" id="password_confirm" name="user_password_confirm" required>
+            <div>
+                <label for="password_confirm">Подтвердите пароль:</label>
+                <input type="password" id="password_confirm" name="user_password_confirm" required>
+            </div>
 
-        <input type="submit" value="Зарегистрироваться">
+            <input type="submit" value="Зарегистрироваться">
+        </div>
     </form>
 </body>
 </html>

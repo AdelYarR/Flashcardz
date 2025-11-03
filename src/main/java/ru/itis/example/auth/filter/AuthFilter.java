@@ -40,17 +40,20 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String path = getRequestPath(request);
-        logger.info("Filtering the path: " + path);
-        if (PUBLIC_PATHS.contains(path)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         Cookie[] cookies = request.getCookies();
         String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
 
         boolean isAuthenticated = (sessionId != null && sessionService.isValid(sessionId));
+
+        String path = getRequestPath(request);
+        logger.info("Filtering the path: " + path);
+        if (PUBLIC_PATHS.contains(path) && !isAuthenticated) {
+            filterChain.doFilter(request, response);
+            return;
+        } else if (PUBLIC_PATHS.contains(path) && isAuthenticated) {
+            response.sendRedirect(request.getContextPath() + "/hub/groups");
+            return;
+        }
 
         if (!isAuthenticated) {
             response.sendRedirect(request.getContextPath() + "/");

@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface TrainingRepository {
     void deleteOldTrainingSession(Long userId, Long cardGroupId);
+    void deleteTrainingSession(String trainingSessionId);
+    void deleteUserCardProgressByUserAndGroupId(Long userId, Long cardGroupId);
     List<UserCardProgressWithSeconds> getProgressesByUserAndCardGroupId(Long userId, Long cardGroupId);
     void addTrainingSession(TrainingSession trainingSession);
     void addTrainingSessionCard(String trainingSessionId, Long trainingCardId, Integer cardOrder);

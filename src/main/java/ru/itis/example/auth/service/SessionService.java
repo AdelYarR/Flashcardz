@@ -48,6 +48,10 @@ public class SessionService {
         return session.getUserId();
     }
 
+    public void removeBySessionId(String sessionId) {
+        sessionRepository.removeBySessionId(sessionId);
+    }
+
     public Optional<Session> findBySessionId(String sessionId) {
         return sessionRepository.findBySessionId(sessionId);
     }

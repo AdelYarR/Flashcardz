@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Hub groups</title>
-    <link rel="stylesheet" href="css/group-menu.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
     <%@ include file="header.jsp" %>
@@ -15,4 +15,6 @@
             <my:hub-card-group card_group="${card_group}"/>
         </c:forEach>
     </div>
+
+    <my:pagination page="${page}" totalPages="${total_pages}" />
 </body>

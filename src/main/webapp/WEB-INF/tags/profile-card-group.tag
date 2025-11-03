@@ -1,4 +1,4 @@
-<%@ tag description="Card Group Tag" pageEncoding="UTF-8"%>
+<%@ tag description="Profile Card Group Tag" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag isELIgnored="false" %>
 <%@ attribute name="card_group" required="true" type="ru.itis.example.models.CardGroup" %>

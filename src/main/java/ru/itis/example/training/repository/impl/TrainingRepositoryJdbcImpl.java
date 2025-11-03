@@ -38,6 +38,37 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
         }
     }
 
+    public void deleteTrainingSession(String trainingSessionId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "DELETE FROM training_sessions WHERE session_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, trainingSessionId);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            logger.error("Database error occurred while deleting training session by its session id: " + e);
+            throw new RuntimeException("database error occurred while deleting training session by its session id: " + e);
+        }
+    }
+
+    public void deleteUserCardProgressByUserAndGroupId(Long userId, Long cardGroupId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "DELETE FROM user_card_progress WHERE user_id = ? AND card_id IN (SELECT id from cards WHERE card_group_id = ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(2, cardGroupId);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            logger.error("Database error occurred while deleting user card progresses by user id and card group id: " + e);
+            throw new RuntimeException("database error occurred while deleting user card progresses by user id and card group id: " + e);
+        }
+    }
+
     public List<UserCardProgressWithSeconds> getProgressesByUserAndCardGroupId(Long userId, Long cardGroupId) {
         List<UserCardProgressWithSeconds> userCardProgressWithSeconds = new ArrayList<>();
 

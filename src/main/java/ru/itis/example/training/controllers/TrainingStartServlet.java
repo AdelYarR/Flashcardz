@@ -1,48 +1,20 @@
-package ru.itis.example.training.controller;
+package ru.itis.example.training.controllers;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.example.auth.repository.SessionRepository;
-import ru.itis.example.auth.service.SessionService;
-import ru.itis.example.card.repositories.CardRepository;
-import ru.itis.example.card.services.CardService;
-import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
 import ru.itis.example.models.TrainingSession;
 import ru.itis.example.models.UserCardProgressWithSeconds;
-import ru.itis.example.training.repository.TrainingRepository;
-import ru.itis.example.training.service.TrainingService;
 import ru.itis.example.util.CookieHelper;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/training-start")
-public class TrainingStartServlet extends HttpServlet {
-
-    private final Logger logger = new Logger(this.getClass().getName());
-    private TrainingService trainingService;
-    private CardService cardService;
-    private SessionService sessionService;
-
-    @Override
-    public void init() {
-        ServletContext context = getServletContext();
-
-        TrainingRepository trainingRepository = (TrainingRepository) context.getAttribute("training_repository");
-        CardRepository cardRepository = (CardRepository) context.getAttribute("card_repository");
-        SessionRepository sessionRepository = (SessionRepository) context.getAttribute("session_repository");
-
-        trainingService = new TrainingService(trainingRepository);
-        cardService = new CardService(cardRepository);
-        sessionService = new SessionService(sessionRepository);
-        logger.info("Successful initialization.");
-    }
+public class TrainingStartServlet extends BaseTrainingServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,5 +43,3 @@ public class TrainingStartServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/training-continue");
     }
 }
-
-

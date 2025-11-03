@@ -127,7 +127,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting card group by group id: " + e);
-            throw new RuntimeException("database error occurred while delete card group by group id: " + e);
+            throw new RuntimeException("database error occurred while deleting card group by group id: " + e);
         }
     }
 
