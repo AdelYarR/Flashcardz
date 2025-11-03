@@ -4,6 +4,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itis.example.card.exceptions.GroupException;
+import ru.itis.example.card.exceptions.GroupRepositoryException;
 import ru.itis.example.card.repositories.CardGroupRepository;
 import ru.itis.example.card.services.GroupService;
 import ru.itis.example.logger.Logger;
@@ -26,7 +28,7 @@ public class HubGroupsServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             List<CardGroup> cardGroups = cardGroupService.getCardGroups();
 
@@ -42,12 +44,13 @@ public class HubGroupsServlet extends HttpServlet {
             request.setAttribute("total_pages", totalPages);
             request.setAttribute("card_groups", pagedCardGroups);
             request.getRequestDispatcher("/hub-groups.jsp").forward(request, response);
+        } catch (GroupRepositoryException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+        } catch (GroupException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
         } catch (Exception e) {
-            try {
-                response.sendError(500, "Internal Server Error");
-            } catch (IOException ex) {
-                logger.error("Failed to send error: " + ex);
-            }
+            logger.error("Unexpected error: " + e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
         }
     }
 }

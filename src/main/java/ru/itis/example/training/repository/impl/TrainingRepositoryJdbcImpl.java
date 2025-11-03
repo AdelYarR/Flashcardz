@@ -4,6 +4,7 @@ import ru.itis.example.logger.Logger;
 import ru.itis.example.models.TrainingSession;
 import ru.itis.example.models.UserCardProgress;
 import ru.itis.example.models.UserCardProgressWithSeconds;
+import ru.itis.example.training.exceptions.TrainingRepositoryException;
 import ru.itis.example.training.repository.TrainingRepository;
 
 import javax.sql.DataSource;
@@ -34,7 +35,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting training session: " + e);
-            throw new RuntimeException("database error occurred while deleting training session: " + e);
+            throw new TrainingRepositoryException("database error occurred while deleting training session: " + e);
         }
     }
 
@@ -49,7 +50,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting training session by its session id: " + e);
-            throw new RuntimeException("database error occurred while deleting training session by its session id: " + e);
+            throw new TrainingRepositoryException("database error occurred while deleting training session by its session id: " + e);
         }
     }
 
@@ -65,7 +66,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting user card progresses by user id and card group id: " + e);
-            throw new RuntimeException("database error occurred while deleting user card progresses by user id and card group id: " + e);
+            throw new TrainingRepositoryException("database error occurred while deleting user card progresses by user id and card group id: " + e);
         }
     }
 
@@ -111,7 +112,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             return userCardProgressWithSeconds;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting user card progresses: " + e);
-            throw new RuntimeException("database error occurred while getting user card progresses: " + e);
+            throw new TrainingRepositoryException("database error occurred while getting user card progresses: " + e);
         }
     }
 
@@ -132,7 +133,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error("Database error occurred while adding training session: " + e);
-            throw new RuntimeException("database error occurred while adding training session: " + e);
+            throw new TrainingRepositoryException("database error occurred while adding training session: " + e);
         }
     }
 
@@ -150,7 +151,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while adding training session card: " + e);
-            throw new RuntimeException("database error occurred while adding training session card: " + e);
+            throw new TrainingRepositoryException("database error occurred while adding training session card: " + e);
         }
     }
 
@@ -185,7 +186,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             return optionalTrainingSession;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting training session: " + e);
-            throw new RuntimeException("database error occurred while getting training session: " + e);
+            throw new TrainingRepositoryException("database error occurred while getting training session: " + e);
         }
     }
 
@@ -208,7 +209,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             return trainingCardIds;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting training card ids by training session id: " + e);
-            throw new RuntimeException("database error occurred while getting training card ids by training session id:" + e);
+            throw new TrainingRepositoryException("database error occurred while getting training card ids by training session id:" + e);
         }
     }
 
@@ -232,7 +233,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             return exists;
         } catch (SQLException e) {
             logger.error("Database error occurred while checking existence of user card progress: " + e);
-            throw new RuntimeException("database error occurred while checking existence of user card progress: " + e);
+            throw new TrainingRepositoryException("database error occurred while checking existence of user card progress: " + e);
         }
     }
 
@@ -250,7 +251,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error("Database error occurred while adding new user card progress: " + e);
-            throw new RuntimeException("database error occurred while adding new user card progress: " + e);
+            throw new TrainingRepositoryException("database error occurred while adding new user card progress: " + e);
         }
     }
 
@@ -268,7 +269,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while updating user card progress: " + e);
-            throw new RuntimeException("database error occurred while updating user card progress: " + e);
+            throw new TrainingRepositoryException("database error occurred while updating user card progress: " + e);
         }
     }
 
@@ -284,7 +285,7 @@ public class TrainingRepositoryJdbcImpl implements TrainingRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while incrementing current index of training session: " + e);
-            throw new RuntimeException("database error occurred while incrementing current index of training session: " + e);
+            throw new TrainingRepositoryException("database error occurred while incrementing current index of training session: " + e);
         }
     }
 }

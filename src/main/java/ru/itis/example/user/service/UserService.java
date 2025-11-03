@@ -2,12 +2,23 @@ package ru.itis.example.user.service;
 
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.User;
+import ru.itis.example.user.exceptions.UserAuthenticationException;
+import ru.itis.example.user.exceptions.UserRegistrationException;
+import ru.itis.example.user.exceptions.UserRepositoryException;
+import ru.itis.example.user.exceptions.UserValidationException;
 import ru.itis.example.user.repository.UserRepository;
 import ru.itis.example.util.Hasher;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class UserService {
+
+    private static final int MIN_NAME_LENGTH = 4;
+    private static final int MAX_NAME_LENGTH = 32;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int MAX_PASSWORD_LENGTH = 128;
+    private static final String NAME_PATTERN = "^[a-zA-Z0-9]+$";
 
     private final Logger logger = new Logger(this.getClass().getName());
     private final UserRepository userRepository;
@@ -19,28 +30,22 @@ public class UserService {
     public Long registryUser(String name, String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             logger.info("User " + name + ": Passwords don't match.");
-            throw new IllegalArgumentException("passwords don't match");
+            throw new UserRegistrationException("passwords don't match");
         }
         if (getUser(name).isPresent()) {
             logger.info("User " + name + ": Name is already taken.");
-            throw new IllegalArgumentException("name is already taken");
+            throw new UserRegistrationException("name is already taken");
         }
 
-        try {
-            validateName(name);
-            validatePassword(password);
-        } catch (RuntimeException e) {
-            logger.info("User " + name + ": " + e);
-            throw new IllegalArgumentException(e);
-        }
-
+        validateName(name);
+        validatePassword(password);
         logger.info("User " + name + ": Validation was successful.");
 
         String hashedPassword;
         try {
             hashedPassword = Hasher.hash(password);
         } catch (Exception e) {
-            throw new RuntimeException("failed to hash the password: " + e);
+            throw new UserRegistrationException("failed to hash the password: " + e);
         }
         logger.info("User " + name + ": Hashed password.");
 
@@ -55,7 +60,7 @@ public class UserService {
         Optional<User> foundUser = getUser(name);
         if (foundUser.isEmpty()) {
             logger.info("User " + name + " is not found.");
-            throw new IllegalArgumentException("user " + name + " is not found");
+            throw new UserAuthenticationException("user " + name + " is not found");
         }
         logger.info("User " + name + " is found.");
 
@@ -68,11 +73,11 @@ public class UserService {
             }
         } catch (Exception e) {
             logger.info("User " + name + ": Failed to unhash the password: " + e);
-            throw new RuntimeException("failed to unhash the password: " + e);
+            throw new UserAuthenticationException("failed to unhash the password: " + e);
         }
 
         logger.info("User " + name + ": Passwords don't match.");
-        throw new IllegalArgumentException("passwords don't match");
+        throw new UserAuthenticationException("passwords don't match");
     }
 
     public Optional<User> getUser(String name) {
@@ -80,26 +85,26 @@ public class UserService {
     }
 
     public void validateName(String name) {
-        if (name.length() < 4) {
-            throw new IllegalArgumentException("name is too short, the length must be at least 4");
+        if (name.length() < MIN_NAME_LENGTH) {
+            throw new UserValidationException("name is too short, the length must be at least 4");
         }
 
-        if (name.length() > 32) {
-            throw new IllegalArgumentException("name is too long, the length must be no more than 32");
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new UserValidationException("name is too long, the length must be no more than 32");
         }
 
-        if (!name.matches("^[a-zA-Z0-9]+$")) {
-            throw new IllegalArgumentException("name must contain only english letters and numbers");
+        if (!name.matches(NAME_PATTERN)) {
+            throw new UserValidationException("name must contain only english letters and numbers");
         }
     }
 
     public void validatePassword(String password) {
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("password is too short, the length must be at least 8");
+        if (password.length() < MIN_PASSWORD_LENGTH ) {
+            throw new UserValidationException("password is too short, the length must be at least 8");
         }
 
-        if (password.length() > 128) {
-            throw new IllegalArgumentException("password is too long, the length must be no more than 128");
+        if (password.length() > MAX_PASSWORD_LENGTH) {
+            throw new UserValidationException("password is too long, the length must be no more than 128");
         }
     }
 }

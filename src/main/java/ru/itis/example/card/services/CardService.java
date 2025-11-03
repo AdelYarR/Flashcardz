@@ -1,5 +1,6 @@
 package ru.itis.example.card.services;
 
+import ru.itis.example.card.exceptions.CardNotFoundException;
 import ru.itis.example.card.repositories.CardRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
@@ -19,13 +20,8 @@ public class CardService {
     }
 
     public void add(Card card) {
-        try {
-            Long cardId = cardRepository.add(card);
-            logger.info("Card " + cardId + " was successfully added.");
-        } catch (RuntimeException e) {
-            logger.error("Failed to add card to DB: " + e);
-            throw new RuntimeException("failed to add card to DB: " + e);
-        }
+        Long cardId = cardRepository.add(card);
+        logger.info("Card " + cardId + " was successfully added.");
     }
 
     public List<Card> getCardsByGroupId(Long cardGroupId) {
@@ -37,7 +33,7 @@ public class CardService {
     public Card getCardById(Long cardId) {
         Optional<Card> optionalCard = cardRepository.getCardById(cardId);
         if (optionalCard.isEmpty()) {
-            throw new RuntimeException("failed to get card by its id");
+            throw new CardNotFoundException("failed to get card by its id");
         }
 
         return optionalCard.get();

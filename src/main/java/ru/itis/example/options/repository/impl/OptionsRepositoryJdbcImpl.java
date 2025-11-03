@@ -3,6 +3,7 @@ package ru.itis.example.options.repository.impl;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.User;
 import ru.itis.example.models.UserCardSettings;
+import ru.itis.example.options.exceptions.OptionsRepositoryException;
 import ru.itis.example.options.repository.OptionsRepository;
 
 import javax.sql.DataSource;
@@ -49,7 +50,7 @@ public class OptionsRepositoryJdbcImpl implements OptionsRepository {
             return optionalSettings;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting user card settings by user id: " + e);
-            throw new RuntimeException("database error occurred while getting user card settings by user id: " + e);
+            throw new OptionsRepositoryException("database error occurred while getting user card settings by user id: " + e);
         }
     }
 
@@ -68,7 +69,7 @@ public class OptionsRepositoryJdbcImpl implements OptionsRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while updating user card settings: " + e);
-            throw new RuntimeException("database error occurred while updating user card settings: " + e);
+            throw new OptionsRepositoryException("database error occurred while updating user card settings: " + e);
         }
     }
 }

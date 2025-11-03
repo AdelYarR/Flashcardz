@@ -2,6 +2,7 @@ package ru.itis.example.user.repository.impl;
 
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.User;
+import ru.itis.example.user.exceptions.UserRepositoryException;
 import ru.itis.example.user.repository.UserRepository;
 
 import javax.sql.DataSource;
@@ -43,7 +44,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
             }
         } catch (SQLException e) {
             logger.error("Database error occurred while adding the user: " + e);
-            throw new RuntimeException("database error occurred while adding the user: " + e);
+            throw new UserRepositoryException("database error occurred while adding the user: " + e);
         }
     }
 
@@ -73,7 +74,7 @@ public class UserRepositoryJdbcImpl implements UserRepository {
             return optionalUser;
         } catch (SQLException e) {
             logger.error("Database error occurred while searching for the user " + name + ": " + e);
-            throw new RuntimeException("database error occurred while searching for the user: " + e);
+            throw new UserRepositoryException("database error occurred while searching for the user: " + e);
         }
     }
 }

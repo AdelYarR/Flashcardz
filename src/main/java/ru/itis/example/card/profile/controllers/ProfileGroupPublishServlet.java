@@ -3,6 +3,8 @@ package ru.itis.example.card.profile.controllers;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itis.example.card.exceptions.GroupException;
+import ru.itis.example.card.exceptions.GroupRepositoryException;
 
 import java.io.IOException;
 
@@ -15,12 +17,13 @@ public class ProfileGroupPublishServlet extends BaseCardGroupServlet {
             Long cardGroupId = Long.valueOf(request.getParameter("card_group_id"));
             cardGroupService.publishByGroupId(cardGroupId);
             response.sendRedirect(getServletContext().getContextPath() + "/profile/groups");
+        } catch (GroupRepositoryException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+        } catch (GroupException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
         } catch (Exception e) {
-            try {
-                response.sendError(500, "Internal Server Error");
-            } catch (IOException ex) {
-                logger.error("Failed to send error: " + ex);
-            }
+            logger.error("Unexpected error: " + e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
         }
     }
 }

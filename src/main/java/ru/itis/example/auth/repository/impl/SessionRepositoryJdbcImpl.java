@@ -1,5 +1,6 @@
 package ru.itis.example.auth.repository.impl;
 
+import ru.itis.example.auth.exceptions.SessionRepositoryException;
 import ru.itis.example.auth.repository.SessionRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Session;
@@ -35,7 +36,7 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while adding the session " + session.getSessionId() + ": " + e);
-            throw new RuntimeException("database error occurred while adding the session: " + e);
+            throw new SessionRepositoryException("database error occurred while adding the session: " + e);
         }
     }
 
@@ -54,7 +55,7 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while updating the session " + session.getSessionId() + ": " + e);
-            throw new RuntimeException("database error occurred while updating the session: " + e);
+            throw new SessionRepositoryException("database error occurred while updating the session: " + e);
         }
     }
 
@@ -70,7 +71,7 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting session by its id: " + e);
-            throw new RuntimeException("database error occurred while deleting session by its id: " + e);
+            throw new SessionRepositoryException("database error occurred while deleting session by its id: " + e);
         }
     }
 
@@ -101,7 +102,7 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
             return optionalSession;
         } catch (SQLException e) {
             logger.error("Database error occurred while searching for the session by id " + sessionId + ": " + e);
-            throw new RuntimeException("database error occurred while searching for the session: " + e);
+            throw new SessionRepositoryException("database error occurred while searching for the session: " + e);
         }
     }
 
@@ -132,7 +133,7 @@ public class SessionRepositoryJdbcImpl implements SessionRepository {
             return optionalSession;
         } catch (SQLException e) {
             logger.error("Database error occurred while searching for the session by user id " + userId + ": " + e);
-            throw new RuntimeException("database error occurred while searching for the session: " + e);
+            throw new SessionRepositoryException("database error occurred while searching for the session: " + e);
         }
     }
 }

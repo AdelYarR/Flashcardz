@@ -1,5 +1,6 @@
 package ru.itis.example.card.repositories.impl;
 
+import ru.itis.example.card.exceptions.CardRepositoryException;
 import ru.itis.example.card.repositories.CardRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Card;
@@ -51,7 +52,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             }
         } catch (SQLException e) {
             logger.error("Database error occurred while adding card: " + e);
-            throw new RuntimeException("database error occurred while adding card: " + e);
+            throw new CardRepositoryException("database error occurred while adding card: " + e);
         }
     }
 
@@ -83,7 +84,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             return cards;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting cards: " + e);
-            throw new RuntimeException("database error occurred while getting cards: " + e);
+            throw new CardRepositoryException("database error occurred while getting cards: " + e);
         }
     }
 
@@ -115,7 +116,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             return optionalCard;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting card by its id: " + e);
-            throw new RuntimeException("database error occurred while getting card by its id: " + e);
+            throw new CardRepositoryException("database error occurred while getting card by its id: " + e);
         }
     }
 
@@ -133,7 +134,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while updating card: " + e);
-            throw new RuntimeException("database error occurred while updating card: " + e);
+            throw new CardRepositoryException("database error occurred while updating card: " + e);
         }
     }
 
@@ -149,7 +150,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting cards by card group id: " + e);
-            throw new RuntimeException("database error occurred while deleting cards by card group id: " + e);
+            throw new CardRepositoryException("database error occurred while deleting cards by card group id: " + e);
         }
     }
 
@@ -165,7 +166,7 @@ public class CardRepositoryJdbcImpl implements CardRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting card by id: " + e);
-            throw new RuntimeException("database error occurred while deleting card by id: " + e);
+            throw new CardRepositoryException("database error occurred while deleting card by id: " + e);
         }
     }
 }

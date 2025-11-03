@@ -1,5 +1,6 @@
 package ru.itis.example.card.repositories.impl;
 
+import ru.itis.example.card.exceptions.GroupRepositoryException;
 import ru.itis.example.card.repositories.CardGroupRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.CardGroup;
@@ -48,7 +49,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             }
         } catch (SQLException e) {
             logger.error("Database error occurred while adding card group: " + e);
-            throw new RuntimeException("database error occurred while adding card group: " + e);
+            throw new GroupRepositoryException("database error occurred while adding card group: " + e);
         }
     }
 
@@ -80,7 +81,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             return cardGroups;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting card groups: " + e);
-            throw new RuntimeException("database error occurred while getting card groups: " + e);
+            throw new GroupRepositoryException("database error occurred while getting card groups: " + e);
         }
     }
 
@@ -111,7 +112,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             return cardGroups;
         } catch (SQLException e) {
             logger.error("Database error occurred while getting card groups by author id: " + e);
-            throw new RuntimeException("database error occurred while getting card groups by author id: " + e);
+            throw new GroupRepositoryException("database error occurred while getting card groups by author id: " + e);
         }
     }
 
@@ -127,7 +128,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while deleting card group by group id: " + e);
-            throw new RuntimeException("database error occurred while deleting card group by group id: " + e);
+            throw new GroupRepositoryException("database error occurred while deleting card group by group id: " + e);
         }
     }
 
@@ -144,7 +145,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while updating card group name: " + e);
-            throw new RuntimeException("database error occurred while updating card group name: " + e);
+            throw new GroupRepositoryException("database error occurred while updating card group name: " + e);
         }
     }
 
@@ -160,7 +161,7 @@ public class CardGroupRepositoryJdbcImpl implements CardGroupRepository {
             preparedStatement.close();
         } catch (SQLException e) {
             logger.error("Database error occurred while publishing card group: " + e);
-            throw new RuntimeException("database error occurred while publishing card group: " + e);
+            throw new GroupRepositoryException("database error occurred while publishing card group: " + e);
         }
     }
 }

@@ -4,6 +4,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.itis.example.card.exceptions.CardException;
+import ru.itis.example.card.exceptions.CardRepositoryException;
+import ru.itis.example.card.exceptions.GroupException;
+import ru.itis.example.card.exceptions.GroupRepositoryException;
 import ru.itis.example.models.Card;
 
 import java.io.IOException;
@@ -50,12 +54,13 @@ public class ProfileGroupUpdateServlet extends BaseCardGroupServlet {
             cardService.processCardUpdate(cards, newCards);
 
             response.sendRedirect(getServletContext().getContextPath() + "/profile/groups");
+        } catch (GroupRepositoryException | CardRepositoryException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+        } catch (GroupException | CardException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
         } catch (Exception e) {
-            try {
-                response.sendError(500, "Internal Server Error");
-            } catch (IOException ex) {
-                logger.error("Failed to send error: " + ex);
-            }
+            logger.error("Unexpected error: " + e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
         }
     }
 }

@@ -1,5 +1,7 @@
 package ru.itis.example.auth.service;
 
+import ru.itis.example.auth.exceptions.SessionExpiredException;
+import ru.itis.example.auth.exceptions.SessionNotFoundException;
 import ru.itis.example.auth.repository.SessionRepository;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.Session;
@@ -41,9 +43,12 @@ public class SessionService {
     public Long getUserIdBySessionId(String sessionId) {
         Optional<Session> optionalSession = findBySessionId(sessionId);
         if (optionalSession.isEmpty()) {
-            throw new RuntimeException("failed to get session by session id");
+            throw new SessionNotFoundException("failed to get session by session id");
         }
         Session session = optionalSession.get();
+        if (!session.getValidSession()) {
+            throw new SessionExpiredException(sessionId);
+        }
 
         return session.getUserId();
     }

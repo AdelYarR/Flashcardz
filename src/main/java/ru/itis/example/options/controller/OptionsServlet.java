@@ -7,13 +7,19 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
+import ru.itis.example.auth.exceptions.SessionException;
+import ru.itis.example.auth.exceptions.SessionRepositoryException;
 import ru.itis.example.auth.repository.SessionRepository;
 import ru.itis.example.auth.service.SessionService;
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.DurationWrapper;
 import ru.itis.example.models.UserCardSettings;
+import ru.itis.example.options.exceptions.OptionsException;
+import ru.itis.example.options.exceptions.OptionsRepositoryException;
 import ru.itis.example.options.repository.OptionsRepository;
 import ru.itis.example.options.service.OptionsService;
+import ru.itis.example.training.exceptions.TrainingNotFoundException;
+import ru.itis.example.training.exceptions.TrainingRepositoryException;
 import ru.itis.example.util.CookieHelper;
 
 import java.io.IOException;
@@ -39,43 +45,61 @@ public class OptionsServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
-        Long userId = sessionService.getUserIdBySessionId(sessionId);
+        try {
+            Cookie[] cookies = request.getCookies();
+            String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
+            Long userId = sessionService.getUserIdBySessionId(sessionId);
 
-        UserCardSettings settings = optionsService.getUserCardSettingsByUserId(userId);
+            UserCardSettings settings = optionsService.getUserCardSettingsByUserId(userId);
 
-        request.setAttribute("very_easy",
-                new DurationWrapper(
-                        Duration.ofSeconds(settings.getVeryEasySeconds()),
-                        "very_easy", "Очень легко"));
-        request.setAttribute("easy",
-                new DurationWrapper(
-                        Duration.ofSeconds(settings.getEasySeconds()),
-                        "easy", "Легко"));
-        request.setAttribute("medium",
-                new DurationWrapper(
-                        Duration.ofSeconds(settings.getMediumSeconds()),
-                        "medium", "Средне"));
-        request.setAttribute("hard",
-                new DurationWrapper(
-                        Duration.ofSeconds(settings.getHardSeconds()),
-                        "hard", "Сложно"));
+            request.setAttribute("very_easy",
+                    new DurationWrapper(
+                            Duration.ofSeconds(settings.getVeryEasySeconds()),
+                            "very_easy", "Очень легко"));
+            request.setAttribute("easy",
+                    new DurationWrapper(
+                            Duration.ofSeconds(settings.getEasySeconds()),
+                            "easy", "Легко"));
+            request.setAttribute("medium",
+                    new DurationWrapper(
+                            Duration.ofSeconds(settings.getMediumSeconds()),
+                            "medium", "Средне"));
+            request.setAttribute("hard",
+                    new DurationWrapper(
+                            Duration.ofSeconds(settings.getHardSeconds()),
+                            "hard", "Сложно"));
 
-        request.getRequestDispatcher("/options.jsp").forward(request, response);
+            request.getRequestDispatcher("/options.jsp").forward(request, response);
+        } catch (OptionsRepositoryException | SessionRepositoryException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+        } catch (OptionsException | SessionException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
+        } catch (Exception e) {
+            logger.error("Unexpected error: " + e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+        }
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
-        Long userId = sessionService.getUserIdBySessionId(sessionId);
+        try {
+            Cookie[] cookies = request.getCookies();
+            String sessionId = CookieHelper.getValueFromCookies(cookies, "session_id");
+            Long userId = sessionService.getUserIdBySessionId(sessionId);
 
-        UserCardSettings settings = getUserCardSettingsFromRequest(request, userId);
+            UserCardSettings settings = getUserCardSettingsFromRequest(request, userId);
 
-        optionsService.update(settings);
+            optionsService.update(settings);
 
-        response.sendRedirect(request.getContextPath() + "/options");
+            response.sendRedirect(request.getContextPath() + "/options");
+        } catch (OptionsRepositoryException | SessionRepositoryException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+        } catch (OptionsException | SessionException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
+        } catch (Exception e) {
+            logger.error("Unexpected error: " + e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+        }
     }
 
     private UserCardSettings getUserCardSettingsFromRequest(HttpServletRequest request, Long userId) {

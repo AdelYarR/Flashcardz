@@ -2,6 +2,8 @@ package ru.itis.example.training.service;
 
 import ru.itis.example.logger.Logger;
 import ru.itis.example.models.*;
+import ru.itis.example.training.exceptions.InvalidActionException;
+import ru.itis.example.training.exceptions.TrainingNotFoundException;
 import ru.itis.example.training.repository.TrainingRepository;
 
 import java.util.*;
@@ -69,7 +71,7 @@ public class TrainingService {
     public TrainingSession getByTrainingSessionId(String trainingSessionId) {
         Optional<TrainingSession> optionalTrainingSession = trainingRepository.getByTrainingSessionId(trainingSessionId);
         if (optionalTrainingSession.isEmpty()) {
-            throw new RuntimeException("failed to get training session by its id");
+            throw new TrainingNotFoundException("failed to get training session by its id");
         }
 
         return optionalTrainingSession.get();
@@ -90,7 +92,7 @@ public class TrainingService {
                     case "easy" -> Difficulty.EASY;
                     case "medium" -> Difficulty.MEDIUM;
                     case "hard" -> Difficulty.HARD;
-                    default -> throw new RuntimeException("unknow action while updating user card progress: " + action);
+                    default -> throw new InvalidActionException("unknow action while updating user card progress: " + action);
                 },
                 lastAccess
         );
