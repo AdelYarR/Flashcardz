@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface OptionsRepository {
 
+    void add(UserCardSettings userCardSettings);
     Optional<UserCardSettings> getUserCardSettingsByUserId(Long userId);
     void update(UserCardSettings userCardSettings);
 }

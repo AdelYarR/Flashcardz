@@ -8,19 +8,16 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-
-    <%@ include file="header.jsp" %>
-
-    <div>
+    <div class="message_div">
         <c:choose>
             <c:when test="${not empty message}">
-                ${message}
+                <p>${message}</p>
             </c:when>
             <c:otherwise>
-                Произошла непредвиденная ошибка.
+                <p>Sorry! An unexpected error occurred.</p>
             </c:otherwise>
         </c:choose>
     </div>
-    <a href="${pageContext.request.contextPath}/hub/groups">Вернуться к группам</a>
+    <a class="back_a" href="${pageContext.request.contextPath}/hub/groups">Вернуться</a>
 </body>
 </html>

@@ -31,7 +31,7 @@ public class ProfileGroupUpdateServlet extends BaseCardGroupServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             Long authorId = getUserIdFromCookies(request, response);
             logger.info("Got author id from session: " + authorId);
@@ -54,13 +54,16 @@ public class ProfileGroupUpdateServlet extends BaseCardGroupServlet {
             cardService.processCardUpdate(cards, newCards);
 
             response.sendRedirect(getServletContext().getContextPath() + "/profile/groups");
-        } catch (GroupRepositoryException | CardRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
-        } catch (GroupException | CardException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
+        } catch (GroupRepositoryException e) {
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
+        } catch (GroupException e) {
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

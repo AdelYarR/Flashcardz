@@ -50,12 +50,15 @@ public class TrainingStartServlet extends BaseTrainingServlet {
 
             response.sendRedirect(request.getContextPath() + "/training-continue");
         } catch (TrainingRepositoryException | CardRepositoryException | SessionRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Internal Server Error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (TrainingException | CardException | SessionException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

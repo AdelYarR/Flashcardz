@@ -1,5 +1,6 @@
 package ru.itis.example.card.profile.controllers;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,20 +14,23 @@ import java.io.IOException;
 @WebServlet("/profile/delete-group")
 public class ProfileGroupDeleteServlet extends BaseCardGroupServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             Long cardGroupId = Long.valueOf(request.getParameter("card_group_id"));
             cardService.removeAllByGroupId(cardGroupId);
             cardGroupService.removeByGroupId(cardGroupId);
 
             response.sendRedirect(getServletContext().getContextPath() + "/profile/groups");
-        } catch (GroupRepositoryException | CardRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
-        } catch (GroupException | CardException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
+        } catch (GroupRepositoryException e) {
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
+        } catch (GroupException e) {
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

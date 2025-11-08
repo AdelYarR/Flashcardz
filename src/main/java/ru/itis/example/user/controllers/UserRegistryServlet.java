@@ -3,6 +3,7 @@ package ru.itis.example.user.controllers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import ru.itis.example.models.UserCardSettings;
 import ru.itis.example.user.exceptions.UserRegistrationException;
 import ru.itis.example.user.exceptions.UserRepositoryException;
 import ru.itis.example.user.exceptions.UserValidationException;
@@ -21,6 +22,7 @@ public class UserRegistryServlet extends UserBaseServlet {
             logger.info("Username and password parameters received.");
 
             Long userId = userService.registryUser(name, password, passwordConfirm);
+            optionsService.add(new UserCardSettings(userId));
 
             String sessionId = sessionService.add(userId);
             Cookie sessionCookie = new Cookie("session_id", sessionId);
@@ -29,12 +31,15 @@ public class UserRegistryServlet extends UserBaseServlet {
 
             response.sendRedirect("hub/groups");
         } catch (UserRegistrationException | UserValidationException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (UserRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Internal Server Error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

@@ -25,16 +25,16 @@
     <form method="post" action="${pageContext.request.contextPath}/training-continue">
         <input type="hidden" name="card_id" value="${card.id}">
         <div id="difficulty_choose" style="display: none;">
-            <div>
+            <div class="difficulty_div">
                 <button type="submit" name="action" value="very_easy">Очень легко</button>
             </div>
-            <div>
+            <div class="difficulty_div">
                 <button type="submit" name="action" value="easy">Легко</button>
             </div>
-            <div>
+            <div class="difficulty_div">
                 <button type="submit" name="action" value="medium">Средне</button>
             </div>
-            <div>
+            <div class="difficulty_div">
                 <button type="submit" name="action" value="hard">Сложно</button>
             </div>
         </div>

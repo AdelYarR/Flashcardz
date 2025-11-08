@@ -14,10 +14,12 @@
     <h2>Интервалы повторения</h2>
 
     <form method="post" action="${pageContext.request.contextPath}/options">
-        <my:interval interval="${very_easy}"></my:interval>
-        <my:interval interval="${easy}"></my:interval>
-        <my:interval interval="${medium}"></my:interval>
-        <my:interval interval="${hard}"></my:interval>
+        <div class="intervals-container">
+            <my:interval interval="${very_easy}"></my:interval>
+            <my:interval interval="${easy}"></my:interval>
+            <my:interval interval="${medium}"></my:interval>
+            <my:interval interval="${hard}"></my:interval>
+        </div>
 
         <button type="submit">Изменить</button>
     </form>

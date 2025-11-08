@@ -64,12 +64,15 @@ public class TrainingContinueServlet extends BaseTrainingServlet {
             request.setAttribute("card", card);
             request.getRequestDispatcher("/review-card.jsp").forward(request, response);
         } catch (TrainingNotFoundException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (TrainingRepositoryException | SessionRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Internal Server Error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 
@@ -103,12 +106,15 @@ public class TrainingContinueServlet extends BaseTrainingServlet {
 
             response.sendRedirect(request.getContextPath() + "/training-continue");
         } catch (InvalidActionException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_BAD_REQUEST + " Bad Request: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (TrainingRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Internal Server Error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

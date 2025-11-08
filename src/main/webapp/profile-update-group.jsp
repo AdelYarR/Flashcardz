@@ -36,7 +36,7 @@
         </div>
 
         <button type="submit">Сохранить все изменения</button>
-        <a href="${pageContext.request.contextPath}/profile/groups">Отменить</a>
+        <a class="back" href="${pageContext.request.contextPath}/profile/groups">Отменить</a>
     </form>
 </body>
 </html>

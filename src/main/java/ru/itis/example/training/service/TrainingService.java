@@ -88,10 +88,10 @@ public class TrainingService {
                 userId,
                 cardId,
                 switch(action) {
-                    case "very_easy" -> Difficulty.VERY_EASY;
-                    case "easy" -> Difficulty.EASY;
-                    case "medium" -> Difficulty.MEDIUM;
-                    case "hard" -> Difficulty.HARD;
+                    case VERY_EASY -> Difficulty.VERY_EASY;
+                    case EASY -> Difficulty.EASY;
+                    case MEDIUM -> Difficulty.MEDIUM;
+                    case HARD -> Difficulty.HARD;
                     default -> throw new InvalidActionException("unknow action while updating user card progress: " + action);
                 },
                 lastAccess

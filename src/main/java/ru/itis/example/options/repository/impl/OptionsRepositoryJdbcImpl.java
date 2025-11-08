@@ -22,6 +22,25 @@ public class OptionsRepositoryJdbcImpl implements OptionsRepository {
         this.dataSource = dataSource;
     }
 
+    public void add(UserCardSettings userCardSettings) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "INSERT INTO user_card_settings (very_easy_seconds, easy_seconds, medium_seconds, hard_seconds, user_id) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, userCardSettings.getVeryEasySeconds());
+            preparedStatement.setInt(2, userCardSettings.getEasySeconds());
+            preparedStatement.setInt(3, userCardSettings.getMediumSeconds());
+            preparedStatement.setInt(4, userCardSettings.getHardSeconds());
+            preparedStatement.setLong(5, userCardSettings.getUserId());
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            logger.error("Database error occurred while adding user card settings: " + e);
+            throw new OptionsRepositoryException("database error occurred while adding user card settings: " + e);
+        }
+    }
+
     public Optional<UserCardSettings> getUserCardSettingsByUserId(Long userId) {
         Optional<UserCardSettings> optionalSettings;
         try (Connection connection = dataSource.getConnection()) {

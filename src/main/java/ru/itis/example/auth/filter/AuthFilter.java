@@ -25,7 +25,8 @@ public class AuthFilter implements Filter {
             "/log",
             "/index.jsp",
             "/registry.jsp",
-            "/log.jsp"
+            "/log.jsp",
+            "/css/"
     );
 
     @Override

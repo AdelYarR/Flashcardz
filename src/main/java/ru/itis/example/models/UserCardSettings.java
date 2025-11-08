@@ -1,12 +1,26 @@
 package ru.itis.example.models;
 
 public class UserCardSettings {
+
+    private static final int BASE_VERY_EASY_SECONDS = 86400;
+    private static final int BASE_EASY_SECONDS = 21600;
+    private static final int BASE_MEDIUM_SECONDS = 7200;
+    private static final int BASE_HARD_SECONDS = 3600;
+
     private Long id;
     private Long userId;
     private Integer veryEasySeconds;
     private Integer easySeconds;
     private Integer mediumSeconds;
     private Integer hardSeconds;
+
+    public UserCardSettings(Long userId) {
+        this.userId = userId;
+        this.veryEasySeconds = BASE_VERY_EASY_SECONDS;
+        this.easySeconds = BASE_EASY_SECONDS;
+        this.mediumSeconds = BASE_MEDIUM_SECONDS;
+        this.hardSeconds = BASE_HARD_SECONDS;
+    }
 
     public UserCardSettings(Long id, Long userId, Integer veryEasySeconds, Integer easySeconds, Integer mediumSeconds, Integer hardSeconds) {
         this.id = id;

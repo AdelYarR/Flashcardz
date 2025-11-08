@@ -1,5 +1,6 @@
 package ru.itis.example.card.hub.controllers;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class HubGroupsServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             List<CardGroup> cardGroups = cardGroupService.getCardGroups();
 
@@ -45,12 +46,12 @@ public class HubGroupsServlet extends HttpServlet {
             request.setAttribute("card_groups", pagedCardGroups);
             request.getRequestDispatcher("/hub-groups.jsp").forward(request, response);
         } catch (GroupRepositoryException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error: " + e);
-        } catch (GroupException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         } catch (Exception e) {
             logger.error("Unexpected error: " + e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e);
+            request.setAttribute("message", HttpServletResponse.SC_INTERNAL_SERVER_ERROR + " Unexpected error: " + e);
+            request.getRequestDispatcher("/message.jsp").forward(request, response);
         }
     }
 }

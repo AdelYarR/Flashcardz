@@ -1,5 +1,6 @@
 package ru.itis.example.options.service;
 
+import ru.itis.example.models.User;
 import ru.itis.example.models.UserCardSettings;
 import ru.itis.example.options.exceptions.OptionsNotFoundException;
 import ru.itis.example.options.repository.OptionsRepository;
@@ -12,6 +13,10 @@ public class OptionsService {
 
     public OptionsService(OptionsRepository optionsRepository) {
         this.optionsRepository = optionsRepository;
+    }
+
+    public void add(UserCardSettings userCardSettings) {
+        optionsRepository.add(userCardSettings);
     }
 
     public UserCardSettings getUserCardSettingsByUserId(Long userId) {

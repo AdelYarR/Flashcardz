@@ -104,8 +104,8 @@ public class CardRepositoryJdbcImpl implements CardRepository {
                         cardId,
                         resultSet.getLong("author_id"),
                         resultSet.getLong("card_group_id"),
-                        resultSet.getString("answer"),
-                        resultSet.getString("question")
+                        resultSet.getString("question"),
+                        resultSet.getString("answer")
                 );
                 optionalCard = Optional.of(card);
             } else {
